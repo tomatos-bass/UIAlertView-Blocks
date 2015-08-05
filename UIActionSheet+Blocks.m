@@ -11,10 +11,11 @@
 
 static NSString *RI_BUTTON_ASS_KEY = @"com.random-ideas.BUTTONS";
 static NSString *RI_DISMISSAL_ACTION_KEY = @"com.random-ideas.DISMISSAL_ACTION";
+static NSString *RI_CUSTOM_FONT_KEY = @"com.random-ideas.CUSTOM_FONT";
 
 @implementation UIActionSheet (Blocks)
 
--(id)initWithTitle:(NSString *)inTitle cancelButtonItem:(RIButtonItem *)inCancelButtonItem destructiveButtonItem:(RIButtonItem *)inDestructiveItem otherButtonItems:(RIButtonItem *)inOtherButtonItems, ...
+-(id)initWithTitleBlocks:(NSString *)inTitle cancelButtonItem:(RIButtonItem *)inCancelButtonItem destructiveButtonItem:(RIButtonItem *)inDestructiveItem otherButtonItems:(RIButtonItem *)inOtherButtonItems, ...
 {
     if((self = [self initWithTitle:inTitle delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil]))
     {
@@ -58,13 +59,13 @@ static NSString *RI_DISMISSAL_ACTION_KEY = @"com.random-ideas.DISMISSAL_ACTION";
 }
 
 - (NSInteger)addButtonItem:(RIButtonItem *)item
-{	
-    NSMutableArray *buttonsArray = objc_getAssociatedObject(self, (__bridge const void *)RI_BUTTON_ASS_KEY);	
-	
-	NSInteger buttonIndex = [self addButtonWithTitle:item.label];
-	[buttonsArray addObject:item];
-	
-	return buttonIndex;
+{
+    NSMutableArray *buttonsArray = objc_getAssociatedObject(self, (__bridge const void *)RI_BUTTON_ASS_KEY);
+    
+    NSInteger buttonIndex = [self addButtonWithTitle:item.label];
+    [buttonsArray addObject:item];
+    
+    return buttonIndex;
 }
 
 - (void)setDismissalAction:(void(^)())dismissalAction
@@ -72,15 +73,55 @@ static NSString *RI_DISMISSAL_ACTION_KEY = @"com.random-ideas.DISMISSAL_ACTION";
     objc_setAssociatedObject(self, (__bridge const void *)RI_DISMISSAL_ACTION_KEY, nil, OBJC_ASSOCIATION_COPY);
     objc_setAssociatedObject(self, (__bridge const void *)RI_DISMISSAL_ACTION_KEY, dismissalAction, OBJC_ASSOCIATION_COPY);
 }
-
 - (void(^)())dismissalAction
 {
     return objc_getAssociatedObject(self, (__bridge const void *)RI_DISMISSAL_ACTION_KEY);
 }
 
+- (void)setCustomFont:(UIFont*)aFont
+{
+    objc_setAssociatedObject(self, (__bridge const void *)RI_CUSTOM_FONT_KEY, nil, OBJC_ASSOCIATION_COPY);
+    objc_setAssociatedObject(self, (__bridge const void *)RI_CUSTOM_FONT_KEY, aFont, OBJC_ASSOCIATION_COPY);
+}
+- (UIFont*)customFont
+{
+    return objc_getAssociatedObject(self, (__bridge const void *)RI_CUSTOM_FONT_KEY);
+}
+
+- (void)willPresentActionSheet:(UIActionSheet *)actionSheet
+{
+    UIView *rootView = actionSheet;
+    //    SEL selector = NSSelectorFromString(@"_alertController");
+    //    if ([actionSheet respondsToSelector:selector]) //iOS8
+    //    {
+    //#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+    //        UIAlertController *alertController = [actionSheet valueForKey:@"_alertController"];
+    //        if ([alertController isKindOfClass:[UIAlertController class]])
+    //        {
+    //            rootView = alertController.view;
+    //        }
+    //#endif
+    //    }
+    
+    UIFont *aFont = self.customFont;
+    if (nil != aFont)
+    {
+        for (UIView* vv in rootView.subviews)
+        {
+            if ([vv isKindOfClass:[UILabel class]])
+            {
+                ((UILabel*)vv).font = aFont;
+            }
+            if ([vv isKindOfClass:[UIButton class]])
+            {
+                ((UIButton*)vv).titleLabel.font = aFont;
+            }
+        }
+    }
+}
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    // Action sheets pass back -1 when they're cleared for some reason other than a button being 
+    // Action sheets pass back -1 when they're cleared for some reason other than a button being
     // pressed.
     if (buttonIndex >= 0)
     {
@@ -97,4 +138,5 @@ static NSString *RI_DISMISSAL_ACTION_KEY = @"com.random-ideas.DISMISSAL_ACTION";
 }
 
 @end
+
 

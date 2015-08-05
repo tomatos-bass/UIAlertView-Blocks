@@ -18,5 +18,6 @@
 /** This block is called when the action sheet is dismssed for any reason.
  */
 @property (copy, nonatomic) void(^dismissalAction)();
+@property (copy, nonatomic) UIFont *customFont;
 
 @end
