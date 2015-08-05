@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         =  'UIAlertView-Blocks'
-  s.version      =  '1.0'
+  s.version      =  '1.1'
   s.platform     =  :ios
   s.author       =  'Jiva Devoe'
   s.license      =  { :type => 'MIT', :file => 'LICENSE' }
