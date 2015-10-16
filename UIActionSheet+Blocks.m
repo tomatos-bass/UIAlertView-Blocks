@@ -59,13 +59,13 @@ static NSString *RI_CUSTOM_FONT_KEY = @"com.random-ideas.CUSTOM_FONT";
 }
 
 - (NSInteger)addButtonItem:(RIButtonItem *)item
-{
-    NSMutableArray *buttonsArray = objc_getAssociatedObject(self, (__bridge const void *)RI_BUTTON_ASS_KEY);
-    
-    NSInteger buttonIndex = [self addButtonWithTitle:item.label];
-    [buttonsArray addObject:item];
-    
-    return buttonIndex;
+{	
+    NSMutableArray *buttonsArray = objc_getAssociatedObject(self, (__bridge const void *)RI_BUTTON_ASS_KEY);	
+	
+	NSInteger buttonIndex = [self addButtonWithTitle:item.label];
+	[buttonsArray addObject:item];
+	
+	return buttonIndex;
 }
 
 - (void)setDismissalAction:(void(^)())dismissalAction
@@ -91,17 +91,17 @@ static NSString *RI_CUSTOM_FONT_KEY = @"com.random-ideas.CUSTOM_FONT";
 - (void)willPresentActionSheet:(UIActionSheet *)actionSheet
 {
     UIView *rootView = actionSheet;
-    //    SEL selector = NSSelectorFromString(@"_alertController");
-    //    if ([actionSheet respondsToSelector:selector]) //iOS8
-    //    {
-    //#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
-    //        UIAlertController *alertController = [actionSheet valueForKey:@"_alertController"];
-    //        if ([alertController isKindOfClass:[UIAlertController class]])
-    //        {
-    //            rootView = alertController.view;
-    //        }
-    //#endif
-    //    }
+//    SEL selector = NSSelectorFromString(@"_alertController");
+//    if ([actionSheet respondsToSelector:selector]) //iOS8
+//    {
+//#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+//        UIAlertController *alertController = [actionSheet valueForKey:@"_alertController"];
+//        if ([alertController isKindOfClass:[UIAlertController class]])
+//        {
+//            rootView = alertController.view;
+//        }
+//#endif
+//    }
     
     UIFont *aFont = self.customFont;
     if (nil != aFont)
@@ -121,7 +121,7 @@ static NSString *RI_CUSTOM_FONT_KEY = @"com.random-ideas.CUSTOM_FONT";
 }
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    // Action sheets pass back -1 when they're cleared for some reason other than a button being
+    // Action sheets pass back -1 when they're cleared for some reason other than a button being 
     // pressed.
     if (buttonIndex >= 0)
     {
@@ -138,5 +138,4 @@ static NSString *RI_CUSTOM_FONT_KEY = @"com.random-ideas.CUSTOM_FONT";
 }
 
 @end
-
 
